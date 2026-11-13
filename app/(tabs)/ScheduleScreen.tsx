@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import { ScrollView, View, Text, Pressable, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Calendar } from 'react-native-calendars';
@@ -15,6 +15,7 @@ export default function ScheduleScreen() {
   // const mockClasses = [{ id: 1, title: "maths", date: "2026-09-10", time: "10:00" }, { id: 2, title: "english", date: "2026-09-10", time: "10:00" }]
   // const [newClass, setNewClass] = useState(mockClasses);
   const tasks = useStore((state: any) => state.tasks);
+  //state is global memory object in which zustand injetcts all the arrays and functions
   const classes = useStore((state: any) => state.classes);
   const addTask = useStore((state: any) => state.addTask);
   const addClasses = useStore((state: any) => state.addClasses);
@@ -47,7 +48,6 @@ export default function ScheduleScreen() {
     }
   }
 
-
   return (
     <SafeAreaView className="flex-1">
       <ScrollView>
@@ -79,8 +79,10 @@ export default function ScheduleScreen() {
                   .filter((item: any) => item.date == selectedDate)
                   .map((item: any) => (
                     <ScheduleTaskItem
-                      key={item.id}
+                      key={item._id}
+                      id={item._id}
                       title={item.title}
+                      isCompleted= {item.isCompleted}
                     />
                   ))
               }
@@ -118,7 +120,8 @@ export default function ScheduleScreen() {
                 .map((item: any) => {
                   return (
                     <ScheduleClassItem
-                      key={item.id} //id prop is necessary when rendering a list using .map()
+                      key={item._id} //id prop is necessary when rendering a list using .map()
+                      id={item._id}
                       time={item.time}
                       title={item.title}
                     />

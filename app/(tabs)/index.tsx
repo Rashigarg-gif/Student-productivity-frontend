@@ -1,7 +1,7 @@
 import { useColorScheme } from "nativewind";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TaskItem from "@/components/TaskItem";
 import ClassItem from "@/components/ClassItem";
 import { useStore } from '../../store/useStore';
@@ -12,12 +12,20 @@ export default function TabOneScreen() {
   // const [newClass, setNewClass] = useState([{ id: 1, time: "10:00- 11:00 A.M", title: "Maths" }, { id: 2, time: "11:00- 12:00", title: "English" }]);
   const tasks = useStore((state: any) => state.tasks);
   const classes = useStore((state: any) => state.classes);
+  const userName = useStore((state: any) => state.userName);
   const today = new Date().toISOString().split('T')[0];
 
   const now = new Date();
   const currentHours = now.getHours().toString().padStart(2, '0');
   const currentMinutes = now.getMinutes().toString().padStart(2, '0');
   const currentTime = `${currentHours}:${currentMinutes}`;
+  const fetchTasks = useStore((state: any) => state.fetchTasks);
+  const fetchClasses = useStore((state: any) => state.fetchClasses);
+
+  useEffect(() => {
+    fetchTasks();
+    fetchClasses();
+  }, []);
   return (
     <SafeAreaView className="flex-1 gap-8">
       {/*safe area view is used so app adjusts to the device like camera and all.
@@ -25,7 +33,7 @@ export default function TabOneScreen() {
 
       <View className="bg-fuchsia-100 rounded-xl w-[97%] self-center p-8 justify-center">
         <Text className="font-bold text-8xl text-slate-700">
-          Hello Rashi!
+          Hello {userName}!
         </Text>
         <Text className="font-sans font-bold text-5xl text-slate-700 mt-1">
           What's new today?
@@ -49,8 +57,10 @@ export default function TabOneScreen() {
             .map((item:any) => {
               return (
                 <TaskItem
-                  key={item.id}
+                  key={item._id}
+                  id= {item._id}
                   title={item.title}
+                  isCompleted= {item.isCompleted}
                 />
               )
             })}
@@ -75,7 +85,7 @@ export default function TabOneScreen() {
           .map((item: any) => {
             return (
               <ClassItem
-                key={item.id} //id prop is necessary when rendering a list using .map()
+                key={item._id} //id prop is necessary when rendering a list using .map()
                 time={item.time}
                 title={item.title}
               />
@@ -91,7 +101,7 @@ export default function TabOneScreen() {
   /*view is already a flexbox in react but is shrink-wrapped*/
 }
 {
-  /* 
+/* 
 **three flex box properties:
 Main axis: flexDirection, cross axis: opposite (default: column up to down is main axis and items sit vertically) 
 PARENT:
