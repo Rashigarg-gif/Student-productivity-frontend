@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-const API_URL = 'http://192.168.137.1:3000';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { create } from 'zustand';
+const API_URL = 'https://student-productivity-backend-vcnn.onrender.com';
 export const useStore = create((set) => ({
     // passing your data and functions into create, and it hands you back a brand new, custom React Hook.
     // This custom hook can now be imported into any file in your app (Dashboard, Profile, Schedule) to share the exact same memory.
